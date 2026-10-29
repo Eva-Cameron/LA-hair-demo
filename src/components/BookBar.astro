@@ -1,0 +1,33 @@
+---
+import Icon from "./Icon.astro";
+import { salon } from "../data/salon";
+---
+<!-- Phones and tablets only: a quiet booking bar that appears after the hero and steps aside near the booking section. -->
+<div class="bookbar" id="bookbar" hidden>
+  <a class="btn" href="#book">Book an appointment</a>
+  <a class="call" href={salon.phone.value.href} aria-label={`Call the salon on ${salon.phone.value.display}`}><Icon name="phone" /></a>
+</div>
+<style>
+  .bookbar { position: fixed; z-index: 35; left: 0; right: 0; bottom: 0; display: none; gap: 0.5rem; padding: 0.6rem max(var(--margin), env(safe-area-inset-right, 0px)) calc(0.6rem + env(safe-area-inset-bottom, 0px)) max(var(--margin), env(safe-area-inset-left, 0px)); background: color-mix(in srgb, var(--chalk) 94%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--rule); transform: translateY(110%); transition: transform 360ms var(--ease-out); }
+  .bookbar.show { transform: none; }
+  .bookbar .btn { flex: 1; min-height: 3rem; }
+  .call { display: grid; place-items: center; width: 3rem; height: 3rem; border: 1px solid var(--ink); color: var(--ink); }
+  .call :global(svg) { width: 1.25rem; height: 1.25rem; }
+  @media (max-width: 64rem) { .bookbar { display: flex; } }
+  @media (prefers-reduced-motion: reduce) { .bookbar { transition: none; } }
+</style>
+<script>
+  const bar = document.getElementById("bookbar")!;
+  bar.hidden = false;
+  const hero = document.getElementById("top");
+  const quiet = [document.getElementById("book"), document.querySelector("footer")].filter(Boolean) as Element[];
+  const seen = new Set<Element>();
+  let pastHero = false;
+  const sync = () => bar.classList.toggle("show", pastHero && seen.size === 0);
+  if (hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); }).observe(hero);
+  const io = new IntersectionObserver((es) => { for (const e of es) e.isIntersecting ? seen.add(e.target) : seen.delete(e.target); sync(); });
+  quiet.forEach((el) => io.observe(el));
+  // Hidden from assistive tech and keyboard while it is off screen.
+  new MutationObserver(() => bar.toggleAttribute("inert", !bar.classList.contains("show"))).observe(bar, { attributes: true, attributeFilter: ["class"] });
+  bar.toggleAttribute("inert", true);
+</script>

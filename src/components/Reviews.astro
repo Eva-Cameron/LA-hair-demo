@@ -1,0 +1,50 @@
+---
+import Icon from "./Icon.astro";
+import { reviews, salon } from "../data/salon";
+const rating = salon.googleRating.confirmed ? salon.googleRating.value : null;
+---
+<section class="section reviews" id="reviews" aria-labelledby="reviews-title">
+  <div class="wrap grid">
+    <p class="label side" data-reveal="fade">Kind words</p>
+    {reviews.length > 0 ? (
+      <div class="quotes">
+        {reviews.slice(0, 3).map((r, i) => (
+          <figure class:list={["quote", { lead: i === 0 }]} data-reveal="fade" data-delay={String(i * 100)}>
+            <blockquote><p>“{r.quote}”</p></blockquote>
+            <figcaption class="label">{r.name}{r.service && ` · ${r.service}`} · <a href={r.url} target="_blank" rel="noopener">Google review</a></figcaption>
+          </figure>
+        ))}
+      </div>
+    ) : (
+      <h2 id="reviews-title" class="display statement" data-reveal="lines">
+        <span class="line"><span>In our clients'</span></span>
+        <span class="line"><span>own words.</span></span>
+      </h2>
+    )}
+    <div class="aside" data-reveal="fade" data-delay="150">
+      {rating && <p class="rating"><span class="num">{rating.rating.toFixed(1)}</span><span class="muted">from {rating.count} Google reviews</span></p>}
+      <p class="muted">Clients have shared their experiences of the salon on Google. Read them as they wrote them.</p>
+      <a class="link" href={salon.googleReviewsUrl} target="_blank" rel="noopener">Read reviews on Google <Icon name="arrow-out" /><span class="visually-hidden">(opens in a new tab)</span></a>
+    </div>
+    {reviews.length > 0 && <h2 id="reviews-title" class="visually-hidden">Client reviews</h2>}
+  </div>
+</section>
+
+<style>
+  .reviews .grid { row-gap: 2.5rem; align-items: end; }
+  .side { grid-column: 1 / span 3; align-self: start; padding-top: 1rem; }
+  .statement { grid-column: 4 / span 6; }
+  .quotes { grid-column: 4 / span 6; display: grid; gap: 3rem; }
+  .quote { margin: 0; display: grid; gap: 1rem; }
+  .quote blockquote { margin: 0; font: 400 1.6rem/1.3 var(--serif); }
+  .quote.lead blockquote { font-size: var(--fs-h2); line-height: 1.08; }
+  .aside { grid-column: 10 / span 3; display: grid; gap: 1.25rem; font-size: var(--fs-small); }
+  .rating { display: grid; gap: 0.25rem; }
+  .num { font: 400 4rem/1 var(--serif); }
+  .link { justify-self: start; }
+  @media (max-width: 64rem) {
+    .side, .statement, .quotes { grid-column: 1 / -1; }
+    .aside { grid-column: 1 / span 8; }
+  }
+  @media (max-width: 48rem) { .aside { grid-column: 1 / -1; } }
+</style>

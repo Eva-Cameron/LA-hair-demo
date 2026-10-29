@@ -1,0 +1,29 @@
+---
+import Base from "../layouts/Base.astro";
+import { salon } from "../data/salon";
+const phone = salon.phone.value;
+const a = salon.address.value;
+---
+<Base title="Privacy notice | Laura Anderson Hair" description="How Laura Anderson Hair handles the details you share through this website.">
+  <main id="main" class="wrap page">
+    <a class="link back" href="/">Back to the salon</a>
+    <h1 class="display">Privacy notice</h1>
+    <div class="prose">
+      <p class="lede">This notice explains what happens to information you share with {salon.legalName.value} through this website.</p>
+      <h2 class="h3">Cookies and tracking</h2>
+      <p>This website does not set cookies and does not use analytics or advertising trackers, so there is nothing to accept or decline.</p>
+      <h2 class="h3">Enquiries</h2>
+      <p>If you send an enquiry, we receive your name, email address, the service you are interested in and your message. We use them only to reply to you and to arrange your appointment, and we do not share them for marketing.</p>
+      <h2 class="h3">Your rights</h2>
+      <p>You can ask to see, correct or delete the information we hold about you at any time. Call us on <a href={phone.href}>{phone.display}</a> or write to us at {a.street}, {a.town} {a.postcode}.</p>
+      <p class="muted small">This notice is to be reviewed by the salon before the website goes live.</p>
+    </div>
+  </main>
+</Base>
+<style>
+  .page { padding-block: clamp(3rem, 8vw, 7rem); display: grid; gap: 2.5rem; max-width: 52rem; }
+  .back { justify-self: start; }
+  .prose { display: grid; gap: 1.25rem; }
+  .prose h2 { margin-top: 1.5rem; }
+  .small { font-size: var(--fs-small); }
+</style>

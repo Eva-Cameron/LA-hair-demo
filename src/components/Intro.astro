@@ -1,0 +1,43 @@
+---
+import { salon } from "../data/salon";
+const award = salon.award.value;
+---
+<section class="section surface-ivory intro" id="salon" aria-labelledby="intro-title">
+  <div class="wrap grid">
+    <p class="label side" data-reveal="fade">The salon</p>
+    <h2 id="intro-title" class="display statement" data-reveal="lines">
+      <span class="line"><span>Great hair starts</span></span>
+      <span class="line"><span>with understanding you.</span></span>
+    </h2>
+    <div class="body" data-reveal="fade" data-delay="120">
+      <p class="lede">Before anything is cut or coloured, we sit down and talk: about your hair's history, how you live with it day to day, and what you would like to feel when you look in the mirror.</p>
+      <p class="muted">That conversation shapes everything that follows. It is how a colour suits your skin rather than a photograph, how a cut grows out gracefully, and why so many clients feel at home from their first visit.</p>
+    </div>
+    <dl class="facts" data-reveal="fade" data-delay="200">
+      <div><dt class="label">Where</dt><dd>{salon.address.value.street}, {salon.address.value.town}</dd></div>
+      <div><dt class="label">Known for</dt><dd>Colour, cutting and occasion hair</dd></div>
+      <div><dt class="label">Recognised</dt><dd>{award.title}, {award.event} {award.year}</dd></div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  .intro .grid { row-gap: clamp(2.5rem, 5vw, 4.5rem); }
+  .side { grid-column: 1 / span 3; padding-top: 1.1rem; }
+  .statement { grid-column: 4 / span 9; }
+  .body { grid-column: 6 / span 5; display: grid; gap: 1.25rem; }
+  .facts { grid-column: 1 / -1; margin: clamp(1rem, 3vw, 2.5rem) 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+  .facts div { padding: 1.4rem 1.5rem 0 0; display: grid; gap: 0.6rem; }
+  .facts div + div { padding-left: 1.5rem; border-left: 1px solid var(--rule); }
+  .facts dd { margin: 0; font: 400 1.5rem/1.2 var(--serif); }
+  @media (max-width: 64rem) {
+    .side { grid-column: 1 / -1; padding-top: 0; }
+    .statement { grid-column: 1 / -1; }
+    .body { grid-column: 3 / -1; }
+  }
+  @media (max-width: 48rem) {
+    .body { grid-column: 1 / -1; }
+    .facts { grid-template-columns: 1fr; }
+    .facts div, .facts div + div { padding: 1.25rem 0; border-left: 0; border-bottom: 1px solid var(--rule); }
+  }
+</style>

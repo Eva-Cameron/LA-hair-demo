@@ -1,0 +1,170 @@
+---
+import Icon from "./Icon.astro";
+import { enquiryEndpoint, salon, services } from "../data/salon";
+const phone = salon.phone.value;
+---
+<section class="section surface-dark booking" id="book" aria-labelledby="book-title">
+  <div class="wrap grid">
+    <div class="lead">
+      <p class="label" data-reveal="fade">Book an appointment</p>
+      <h2 id="book-title" class="display" data-reveal="lines">
+        <span class="line"><span>Take a seat.</span></span>
+        <span class="line"><span>We'll take it</span></span>
+        <span class="line"><span>from here.</span></span>
+      </h2>
+      <div class="call" data-reveal="fade" data-delay="120">
+        <p class="muted">Call the salon to book, or to arrange a consultation before any colour.</p>
+        <a class="phone" href={phone.href}><Icon name="phone" /><span>{phone.display}</span></a>
+        {salon.bookingUrl && <a class="btn on-dark" href={salon.bookingUrl} rel="noopener">Book online <Icon name="arrow" /></a>}
+      </div>
+    </div>
+
+    <div class="side">
+      <figure class="chair" data-reveal="fade" data-delay="200">
+        <div id="chair-stage" class="stage"></div>
+        <figcaption class="label"><span>Move across the chair</span><output id="chair-read" aria-hidden="true"></output></figcaption>
+      </figure>
+
+      {enquiryEndpoint && (
+        <form class="enquiry" id="enquiry" action={enquiryEndpoint} method="post" novalidate data-reveal="fade">
+          <h3 class="form-title">Or send an enquiry</h3>
+          <div class="field"><label for="enquiry-name">Name</label><input id="enquiry-name" name="name" autocomplete="name" required enterkeyhint="next" /><p class="error" id="enquiry-name-error" hidden></p></div>
+          <div class="field"><label for="enquiry-email">Email</label><input id="enquiry-email" name="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required enterkeyhint="next" /><p class="error" id="enquiry-email-error" hidden></p></div>
+          <div class="field"><label for="enquiry-service">Preferred service</label>
+            <select id="enquiry-service" name="service"><option value="">Not sure yet</option>{services.map((s) => <option value={s.enquiry}>{s.title}</option>)}</select>
+          </div>
+          <div class="field"><label for="enquiry-message">Message</label><textarea id="enquiry-message" name="message" rows="4" required enterkeyhint="send"></textarea><p class="error" id="enquiry-message-error" hidden></p></div>
+          <input class="trap" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <div class="field consent"><input id="enquiry-consent" type="checkbox" name="consent" required /><label for="enquiry-consent">I agree to the salon using these details to reply to my enquiry, as set out in the <a href="/privacy/">privacy notice</a>.</label><p class="error" id="enquiry-consent-error" hidden></p></div>
+          <button class="btn on-dark" type="submit">Send enquiry <Icon name="arrow" /></button>
+          <p class="status" id="enquiry-status" role="status" aria-live="polite"></p>
+        </form>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .booking .grid { row-gap: 4rem; align-items: start; }
+  .lead { grid-column: 1 / span 6; display: grid; gap: 2.25rem; }
+  .call { display: grid; gap: 1.25rem; max-width: 28rem; }
+  .phone { display: inline-flex; align-items: center; gap: 1rem; font: 400 clamp(2.2rem, 1.6rem + 2.6vw, 3.6rem)/1 var(--serif); text-decoration: none; color: var(--chalk); padding-block: 0.4rem 0.8rem; border-bottom: 1px solid var(--rule-dark); transition: border-color var(--t-ui) ease, color var(--t-ui) ease; }
+  .phone :global(svg) { width: 0.6em; height: 0.6em; color: var(--champagne); }
+  @media (hover: hover) and (pointer: fine) { .phone:hover { border-color: var(--champagne); color: var(--champagne); } }
+  .side { grid-column: 8 / span 5; display: grid; gap: 3rem; }
+  .chair { margin: 0; display: grid; gap: 0.75rem; }
+  .stage {
+    aspect-ratio: 5 / 4; width: 100%;
+    --hairline-plate: #28211f; --hairline-hi: #c5ac88; --hairline-edge: #b7aa9c; --hairline-mid: #5c514b; --hairline-lo: #3b322e; --hairline-stroke: 1;
+  }
+  .chair figcaption { display: flex; justify-content: space-between; color: var(--taupe); }
+  .chair output { color: var(--champagne); font-variant-numeric: tabular-nums; }
+
+  .enquiry { display: grid; gap: 1.5rem; padding-top: 2.5rem; border-top: 1px solid var(--rule-dark); }
+  .form-title { font-size: 1.75rem; }
+  .field { display: grid; gap: 0.45rem; }
+  .field label { font: 500 var(--fs-label)/1.2 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--taupe); }
+  .field input:not([type="checkbox"]), .field select, .field textarea {
+    font: 400 1.0625rem/1.4 var(--sans); color: var(--chalk); background: transparent; border: 0; border-bottom: 1px solid var(--taupe); border-radius: 0; padding: 0.7rem 0; width: 100%; min-height: 2.75rem;
+  }
+  .field select { appearance: none; background: linear-gradient(45deg, transparent 50%, var(--taupe) 50%) right 0.3rem center / 0.4rem 0.4rem no-repeat, linear-gradient(-45deg, transparent 50%, var(--taupe) 50%) right 0 center / 0.4rem 0.4rem no-repeat; }
+  .field select option { color: var(--ink); }
+  .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline: none; border-bottom-color: var(--champagne); box-shadow: 0 1px 0 var(--champagne); }
+  .field [aria-invalid="true"] { border-bottom-color: #e7a493; }
+  .error { font-size: var(--fs-small); color: #f0b7a8; }
+  .consent { grid-template-columns: auto 1fr; align-items: start; column-gap: 0.75rem; }
+  .consent input { width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; accent-color: var(--champagne); }
+  .consent label { text-transform: none; letter-spacing: 0; font: 400 var(--fs-small)/1.5 var(--sans); color: var(--taupe); }
+  .consent .error { grid-column: 2; }
+  .trap { position: absolute; left: -9999px; }
+  .enquiry .btn { justify-self: start; }
+  .enquiry .btn[aria-busy="true"] { opacity: 0.7; cursor: progress; }
+  .status:empty { display: none; }
+  .status { font-size: var(--fs-small); padding: 1rem 0; border-top: 1px solid var(--rule-dark); }
+  .status.ok { font: 400 1.5rem/1.3 var(--serif); color: var(--chalk); }
+  .status.fail { color: #f0b7a8; }
+  @media (max-width: 64rem) { .lead, .side { grid-column: 1 / -1; } .side { max-width: 40rem; } }
+</style>
+
+<script>
+  /* The Hairline chair: its engine loads only when the section comes near, and it mounts the way the package does. */
+  type Figure = { name: string; range: number[]; tour: ([number, number] | null)[]; mount: (ctx: { stage: HTMLElement; svg: SVGSVGElement; read: { textContent: string } }, v: number) => unknown };
+  declare global { interface Window { HL: any; hairline: (f: Figure) => void } }
+  const stage = document.getElementById("chair-stage");
+  const out = document.getElementById("chair-read");
+  if (stage && out) {
+    window.hairline = (figure) => {
+      const HL = window.HL;
+      HL.inject(document);
+      stage.setAttribute("data-hairline", figure.name);
+      stage.setAttribute("role", "img");
+      stage.setAttribute("aria-label", "Line drawing of a stylist's chair on a hydraulic base beside a trolley with scissors; it turns to face the pointer.");
+      const svg = HL.mk("svg", { viewBox: "0 0 400 320", "aria-hidden": "true" }, stage);
+      const read = { set textContent(v: string) { out.textContent = v === "rest" ? "" : v; }, get textContent() { return out.textContent ?? ""; } };
+      figure.mount({ stage, svg, read }, figure.range[1]);
+      if (!HL.reducedMotion()) {
+        let lap: { stop: () => void } | null = null;
+        new IntersectionObserver(([e]) => {
+          if (e.isIntersecting && !lap) lap = HL.tour(stage, figure.tour, () => {});
+          else if (!e.isIntersecting && lap) { lap.stop(); lap = null; }
+        }, { threshold: 0.5 }).observe(stage);
+      }
+    };
+    const load = (src: string) => new Promise<void>((ok, fail) => { const s = document.createElement("script"); s.src = src; s.onload = () => ok(); s.onerror = fail; document.body.append(s); });
+    const io = new IntersectionObserver(async ([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      await load("/hairline/kernel.js");
+      await load("/hairline/chair.js");
+    }, { rootMargin: "400px 0px" });
+    io.observe(stage);
+  }
+
+  /* Enquiry form: validates in place, and only ever reports success when the endpoint confirms it. */
+  const form = document.getElementById("enquiry") as HTMLFormElement | null;
+  if (form) {
+    const status = document.getElementById("enquiry-status")!;
+    const button = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+    const rules: [string, (el: HTMLInputElement) => string][] = [
+      ["enquiry-name", (el) => (el.value.trim() ? "" : "Please tell us your name.")],
+      ["enquiry-email", (el) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()) ? "" : "Please enter an email address we can reply to, like name@example.com.")],
+      ["enquiry-message", (el) => (el.value.trim() ? "" : "Please add a short message so we know how to help.")],
+      ["enquiry-consent", (el) => (el.checked ? "" : "Please tick to let us reply to you.")],
+    ];
+    const check = () => {
+      let first: HTMLElement | null = null;
+      for (const [id, test] of rules) {
+        const el = document.getElementById(id) as HTMLInputElement;
+        const err = document.getElementById(`${id}-error`)!;
+        const msg = test(el);
+        err.textContent = msg; err.hidden = !msg;
+        el.setAttribute("aria-invalid", String(!!msg));
+        if (msg) el.setAttribute("aria-describedby", err.id); else el.removeAttribute("aria-describedby");
+        if (msg && !first) first = el;
+      }
+      first?.focus();
+      return !first;
+    };
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.className = "status"; status.textContent = "";
+      if (!check()) return;
+      if ((form.elements.namedItem("_gotcha") as HTMLInputElement).value) return;
+      button.setAttribute("aria-busy", "true"); button.disabled = true;
+      const label = button.firstChild!.textContent;
+      button.firstChild!.textContent = "Sending… ";
+      try {
+        const res = await fetch(form.action, { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+        if (!res.ok) throw new Error(String(res.status));
+        status.className = "status ok";
+        status.textContent = "Thank you. Your enquiry has been sent, and the salon will reply by email.";
+        form.reset();
+      } catch {
+        status.className = "status fail";
+        status.textContent = "Sorry, your enquiry could not be sent just now. Please try again, or call the salon on 01670 516113.";
+      } finally {
+        button.removeAttribute("aria-busy"); button.disabled = false; button.firstChild!.textContent = label;
+      }
+    });
+  }
+</script>

@@ -1,0 +1,109 @@
+---
+import { Picture } from "astro:assets";
+import Icon from "./Icon.astro";
+import { services, widthsFor } from "../data/salon";
+---
+<section class="section services" id="services" aria-labelledby="services-title">
+  <div class="wrap grid head">
+    <p class="label side" data-reveal="fade">Services</p>
+    <h2 id="services-title" class="h2 title" data-reveal="lines">
+      <span class="line"><span>Considered care,</span></span>
+      <span class="line"><span>from first cut to colour.</span></span>
+    </h2>
+    <p class="muted intro" data-reveal="fade" data-delay="120">Every service begins with a consultation. Prices depend on your hair and what we plan together, so we confirm them with you before we start.</p>
+  </div>
+
+  <div class="wrap">
+    <ul class="list" id="service-list">
+      {services.map((s) => (
+        <li class="row" data-reveal="fade" data-preview={s.id}>
+          <h3 class="h3 name">{s.title}</h3>
+          <p class="muted summary">{s.summary}</p>
+          <a class="link enquire" href={`#book`} data-service={s.enquiry} aria-label={`Enquire about ${s.title.toLowerCase()}`}>Enquire <Icon name="arrow" /></a>
+        </li>
+      ))}
+    </ul>
+    <p class="note muted">Beauty and health treatments are also offered at the salon. Call us to hear what is currently available.</p>
+  </div>
+
+  <!-- A small photograph follows the pointer down the list; decorative, so it is hidden from assistive tech -->
+  <div class="preview frame" aria-hidden="true">
+    {services.map((s) => (
+      <div class="pv" data-for={s.id}>
+        <Picture src={s.photo.src} alt="" formats={["avif", "webp"]} widths={widthsFor(s.photo.src, [320, 480])} sizes="18rem" loading="lazy" style={`object-position:${s.photo.focus}`} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .head { row-gap: 2rem; margin-bottom: clamp(3rem, 6vw, 5.5rem); align-items: end; }
+  .side { grid-column: 1 / span 3; align-self: start; padding-top: 1rem; }
+  .title { grid-column: 4 / span 6; }
+  .intro { grid-column: 10 / span 3; font-size: var(--fs-small); }
+  .list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+  .row {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 5fr) auto; gap: var(--gutter); align-items: baseline;
+    padding: clamp(1.5rem, 2.6vw, 2.25rem) 0; border-bottom: 1px solid var(--rule); position: relative;
+  }
+  .name { transition: transform 400ms var(--ease-out); }
+  .summary { max-width: 32rem; }
+  .enquire { white-space: nowrap; color: var(--ink); }
+  /* The whole row is the target: the link stretches over it */
+  .enquire::after { content: ""; position: absolute; inset: 0; }
+  .note { margin-top: 2rem; font-size: var(--fs-small); max-width: 40rem; }
+
+  .preview { position: fixed; left: 0; top: 0; width: 15rem; aspect-ratio: 4 / 5; z-index: 30; pointer-events: none; opacity: 0; transform: translate3d(-50%, -50%, 0) scale(0.92); transition: opacity 240ms ease, transform 400ms var(--ease-out); display: none; }
+  .preview.on { opacity: 1; transform: translate3d(-50%, -50%, 0) scale(1); }
+  .pv { position: absolute; inset: 0; opacity: 0; transition: opacity 240ms ease; }
+  .pv.on { opacity: 1; }
+  .pv :global(picture), .pv :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .preview { display: block; }
+    .row:hover .name { transform: translateX(0.75rem); }
+    .row:hover .enquire :global(.arrow) { transform: translateX(4px); }
+  }
+  @media (max-width: 64rem) {
+    .side, .title { grid-column: 1 / -1; }
+    .intro { grid-column: 1 / span 8; }
+    .row { grid-template-columns: minmax(0, 1fr) auto; }
+    .summary { grid-column: 1 / -1; grid-row: 2; }
+  }
+  @media (max-width: 48rem) { .intro { grid-column: 1 / -1; } }
+  @media (prefers-reduced-motion: reduce) { .preview { transition: opacity 200ms ease; transform: translate3d(-50%, -50%, 0); } .name { transition: none; } }
+</style>
+
+<script>
+  // Desktop only: a photograph trails the pointer over the list, eased so it settles rather than snaps.
+  const fine = matchMedia("(hover: hover) and (pointer: fine)");
+  const list = document.getElementById("service-list");
+  const preview = document.querySelector<HTMLElement>(".services .preview");
+  if (list && preview) {
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let x = 0, y = 0, tx = 0, ty = 0, raf = 0;
+    const step = () => {
+      x += (tx - x) * (still ? 1 : 0.18); y += (ty - y) * (still ? 1 : 0.18);
+      preview.style.translate = `${x.toFixed(1)}px ${y.toFixed(1)}px`;
+      raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.5 ? requestAnimationFrame(step) : 0;
+    };
+    list.addEventListener("pointermove", (e) => {
+      if (!fine.matches || e.pointerType !== "mouse") return;
+      const row = (e.target as Element).closest<HTMLElement>(".row");
+      if (!row) return;
+      tx = e.clientX + 150; ty = e.clientY;
+      if (!preview.classList.contains("on")) { x = tx; y = ty; }
+      preview.classList.add("on");
+      preview.querySelectorAll<HTMLElement>(".pv").forEach((p) => p.classList.toggle("on", p.dataset.for === row.dataset.preview));
+      if (!raf) raf = requestAnimationFrame(step);
+    });
+    list.addEventListener("pointerleave", () => preview.classList.remove("on"));
+  }
+  // "Enquire" pre-selects the service in the booking form when the form is enabled.
+  document.querySelectorAll<HTMLAnchorElement>("[data-service]").forEach((a) =>
+    a.addEventListener("click", () => {
+      const select = document.querySelector<HTMLSelectElement>("#enquiry-service");
+      if (select) select.value = a.dataset.service ?? "";
+    }),
+  );
+</script>

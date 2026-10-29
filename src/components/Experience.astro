@@ -1,0 +1,45 @@
+---
+import { Picture } from "astro:assets";
+import { photos, widthsFor } from "../data/salon";
+const p = photos.salonChair;
+---
+<section class="section surface-ivory experience" id="experience" aria-labelledby="exp-title">
+  <div class="wrap grid">
+    <div class="text">
+      <p class="label" data-reveal="fade">The experience</p>
+      <h2 id="exp-title" class="h2" data-reveal="lines">
+        <span class="line"><span>Come as you are.</span></span>
+        <span class="line"><span>Leave feeling</span></span>
+        <span class="line"><span>like yourself.</span></span>
+      </h2>
+      <p class="lede muted" data-reveal="fade" data-delay="120">A visit should feel easy from the moment you walk in: a friendly welcome, a proper conversation, and a stylist who explains what they are doing and why.</p>
+      <ul class="points" data-reveal="fade" data-delay="200">
+        <li><span class="h3">Listened to</span><span class="muted">Your consultation comes first, every time.</span></li>
+        <li><span class="h3">Advised honestly</span><span class="muted">Professional judgement on what will suit you, and what will not.</span></li>
+        <li><span class="h3">Looked after</span><span class="muted">Tips and aftercare to keep your hair right between visits.</span></li>
+      </ul>
+    </div>
+    <figure class="image frame" data-reveal="clip">
+      <div class="drift" data-parallax="0.05">
+        <Picture src={p.src} alt={p.alt} formats={["avif", "webp"]} widths={widthsFor(p.src)} sizes="(max-width: 64rem) 100vw, 40vw" loading="lazy" style={`object-position:${p.focus}`} />
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .experience .grid { align-items: center; row-gap: 3rem; }
+  .text { grid-column: 1 / span 6; display: grid; gap: 2rem; }
+  .points { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); max-width: 34rem; }
+  .points li { display: grid; gap: 0.25rem; padding: 1.25rem 0; border-bottom: 1px solid var(--rule); }
+  .points .h3 { font-family: var(--serif); font-size: 1.6rem; line-height: 1.2; }
+  .points .muted { font-size: var(--fs-small); }
+  .image { grid-column: 8 / span 5; margin: 0; aspect-ratio: 3 / 4; }
+  .drift { position: absolute; inset: -5% 0; }
+  .image :global(picture), .image :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 64rem) {
+    .text { grid-column: 1 / -1; }
+    .image { grid-column: 4 / -1; grid-row: 1; aspect-ratio: 4 / 5; margin-right: calc(-1 * var(--margin)); }
+  }
+  @media (max-width: 48rem) { .image { grid-column: 2 / -1; } }
+</style>

@@ -1,0 +1,18 @@
+---
+/** The typographic wordmark: name in tracked serif capitals, descriptor beneath. */
+import { salon } from "../data/salon";
+interface Props { size?: "header" | "footer" }
+const { size = "header" } = Astro.props;
+---
+<span class:list={["wordmark", size]}>
+  <span class="name">Laura Anderson</span>
+  {size === "header" && <span class="desc">{salon.descriptor}</span>}
+</span>
+<style>
+  .wordmark { display: inline-grid; justify-items: center; gap: 0.35rem; line-height: 1; }
+  .name { font-family: var(--serif); font-size: 1.4rem; letter-spacing: 0.22em; text-transform: uppercase; margin-right: -0.22em; white-space: nowrap; }
+  .desc { font: 500 0.6875rem/1 var(--sans); letter-spacing: 0.26em; text-transform: uppercase; margin-right: -0.26em; opacity: 0.8; white-space: nowrap; }
+  .footer { justify-items: start; }
+  .footer .name { font-size: clamp(3.2rem, 0.4rem + 14.4vw, 17rem); letter-spacing: -0.01em; margin-right: 0; text-transform: none; line-height: 0.88; white-space: normal; }
+  @media (max-width: 30rem) { .header .name { font-size: 1.15rem; letter-spacing: 0.18em; margin-right: -0.18em; } }
+</style>

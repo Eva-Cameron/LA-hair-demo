@@ -1,0 +1,58 @@
+---
+import { Picture } from "astro:assets";
+import { gallery, widthsFor } from "../data/salon";
+const anyPlaceholder = gallery.some((g) => g.photo.placeholder);
+---
+<section class="section gallery" id="gallery" aria-labelledby="gallery-title">
+  <div class="wrap grid head">
+    <h2 id="gallery-title" class="display title" data-reveal="lines">
+      <span class="line"><span>Hair</span></span>
+      <span class="line"><span><em>gallery</em></span></span>
+    </h2>
+    <p class="muted lede side" data-reveal="fade" data-delay="120">Colour with depth, cuts with movement, and hair finished for the days that matter.</p>
+  </div>
+  <div class="wrap">
+    <ul class="grid tiles">
+      {gallery.map((g, i) => (
+        <li class:list={["tile", g.ratio, `t${i + 1}`]}>
+          <figure>
+            <div class="frame" data-reveal="clip" data-delay={String((i % 2) * 120)}>
+              <Picture src={g.photo.src} alt={g.photo.alt} formats={["avif", "webp"]} widths={widthsFor(g.photo.src)} sizes="(max-width: 48rem) 100vw, 45vw" loading="lazy" style={`object-position:${g.photo.focus}`} />
+            </div>
+            <figcaption class="label">{g.caption}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+    {anyPlaceholder && <p class="disclaimer muted">Images shown are illustrative. The salon's own work will be shown here.</p>}
+  </div>
+</section>
+
+<style>
+  .head { align-items: end; row-gap: 1.5rem; margin-bottom: clamp(3rem, 6vw, 5rem); }
+  .title { grid-column: 1 / span 7; font-size: clamp(3.4rem, 1rem + 9vw, 10rem); line-height: 0.86; }
+  .title em { color: var(--champagne-ink); padding-left: 0.6em; }
+  .side { grid-column: 9 / span 4; }
+  .tiles { list-style: none; margin: 0; padding: 0; row-gap: clamp(2.5rem, 6vw, 6rem); align-items: start; }
+  figure { margin: 0; display: grid; gap: 0.9rem; }
+  .frame :global(picture), .frame :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .frame :global(img) { transition: transform 900ms var(--ease-out); }
+  .wide .frame { aspect-ratio: 3 / 2; }
+  .tall .frame { aspect-ratio: 3 / 4; }
+  .square .frame { aspect-ratio: 1; }
+  /* An asymmetric spread: offsets and spans vary so no two neighbours share a size */
+  .t1 { grid-column: 1 / span 7; }
+  .t2 { grid-column: 9 / span 4; margin-top: clamp(4rem, 12vw, 12rem); }
+  .t3 { grid-column: 2 / span 4; margin-top: clamp(-6rem, -6vw, -2rem); }
+  .t4 { grid-column: 7 / span 5; }
+  .t5 { grid-column: 1 / span 5; }
+  .t6 { grid-column: 7 / span 6; }
+  .disclaimer { margin-top: 3rem; font-size: var(--fs-small); }
+  @media (hover: hover) and (pointer: fine) { .tile:hover .frame :global(img) { transform: scale(1.03); } }
+  @media (max-width: 48rem) {
+    .title, .side { grid-column: 1 / -1; }
+    .tiles { row-gap: 2.5rem; }
+    .t1, .t2, .t3, .t4, .t5, .t6 { grid-column: 1 / -1; margin-top: 0; }
+    .t2, .t4 { grid-column: 3 / -1; }
+  }
+</style>

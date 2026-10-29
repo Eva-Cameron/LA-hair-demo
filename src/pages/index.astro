@@ -1,0 +1,37 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Intro from "../components/Intro.astro";
+import Services from "../components/Services.astro";
+import Colour from "../components/Colour.astro";
+import Gallery from "../components/Gallery.astro";
+import Experience from "../components/Experience.astro";
+import Reviews from "../components/Reviews.astro";
+import Team from "../components/Team.astro";
+import Booking from "../components/Booking.astro";
+import Visit from "../components/Visit.astro";
+import Footer from "../components/Footer.astro";
+import BookBar from "../components/BookBar.astro";
+---
+<Base
+  title="Laura Anderson Hair | Hairdresser & Hair Colour in Morpeth"
+  description="A colour-led hair salon on Newgate Street, Morpeth. Cutting and styling, colour, balayage, grey blending, corrective colour and occasion hair, each starting with a consultation."
+  schema
+>
+  <Header />
+  <main id="main">
+    <Hero />
+    <Intro />
+    <Services />
+    <Colour />
+    <Gallery />
+    <Experience />
+    <Reviews />
+    <Team />
+    <Booking />
+    <Visit />
+  </main>
+  <Footer />
+  <BookBar />
+</Base>

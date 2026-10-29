@@ -1,0 +1,105 @@
+---
+import Wordmark from "./Wordmark.astro";
+import Icon from "./Icon.astro";
+import { nav, salon } from "../data/salon";
+const phone = salon.phone.value;
+---
+<header class="header" id="header" data-reveal="fade" data-hero>
+  <div class="wrap bar">
+    <nav class="primary" aria-label="Main">
+      <ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul>
+    </nav>
+    <a class="home" href="#top" aria-label="Laura Anderson Hair, back to top"><Wordmark /></a>
+    <div class="end">
+      <a class="btn book" href="#book">Book an appointment</a>
+      <button class="menu-open" type="button" aria-expanded="false" aria-controls="menu" id="menu-open">
+        <span class="visually-hidden">Open menu</span><Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog class="menu" id="menu" aria-label="Menu">
+  <div class="menu-inner">
+    <div class="menu-top">
+      <Wordmark />
+      <button class="menu-close" type="button" id="menu-close"><span class="visually-hidden">Close menu</span><Icon name="close" /></button>
+    </div>
+    <ul class="menu-links">
+      {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+    </ul>
+    <div class="menu-foot">
+      <a class="btn on-dark" href="#book">Book an appointment</a>
+      <a class="call" href={phone.href}><Icon name="phone" /> {phone.display}</a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .header {
+    position: fixed; inset: 0 0 auto; z-index: 40;
+    padding-top: env(safe-area-inset-top, 0px);
+    color: var(--ink);
+    transition: background-color var(--t-ui) ease, border-color var(--t-ui) ease, transform 400ms var(--ease-out);
+    border-bottom: 1px solid transparent;
+  }
+  .header.is-scrolled { background: color-mix(in srgb, var(--chalk) 98%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom-color: var(--rule); }
+  .bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: var(--header-h); transition: height var(--t-ui) var(--ease-out); }
+  .is-scrolled .bar { height: 4.25rem; }
+  .primary ul { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(1.25rem, 2vw, 2.25rem); }
+  .primary a, .menu-links a { text-decoration: none; }
+  .primary a {
+    font: 500 0.75rem/1 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; padding-block: 0.6rem;
+    background: linear-gradient(currentColor, currentColor) left calc(100% - 0.25rem) / 0% 1px no-repeat;
+    transition: background-size var(--t-ui) var(--ease-out);
+  }
+  .home { text-decoration: none; justify-self: center; padding: 0.5rem; }
+  .end { justify-self: end; display: flex; align-items: center; gap: 0.75rem; }
+  .book { min-height: 2.75rem; padding: 0.75rem 1.2rem; font-size: 0.6875rem; }
+  .menu-open, .menu-close { display: none; width: 2.75rem; height: 2.75rem; border: 0; background: none; padding: 0.5rem; cursor: pointer; }
+  .menu-open :global(svg), .menu-close :global(svg) { width: 100%; height: 100%; }
+  @media (hover: hover) and (pointer: fine) { .primary a:hover { background-size: 100% 1px; } }
+
+  @media (max-width: 64rem) {
+    .bar { grid-template-columns: 2.75rem 1fr 2.75rem; height: 4.25rem; }
+    .primary, .book { display: none; }
+    .home { grid-column: 2; }
+    .end { grid-column: 3; }
+    .menu-open { display: block; }
+  }
+
+  .menu {
+    position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+    background: var(--espresso); color: var(--chalk);
+  }
+  .menu::backdrop { background: rgb(33 27 25 / 0.5); }
+  .menu[open] { animation: menu-in 320ms var(--ease-out); }
+  @keyframes menu-in { from { opacity: 0; transform: translateY(-0.75rem); } }
+  .menu-inner { min-height: 100%; display: grid; grid-template-rows: auto 1fr auto; padding: max(1rem, env(safe-area-inset-top)) max(var(--margin), env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(var(--margin), env(safe-area-inset-left)); }
+  .menu-top { display: grid; grid-template-columns: 2.75rem 1fr 2.75rem; align-items: center; justify-items: center; min-height: 3.25rem; }
+  .menu-top :global(.wordmark) { grid-column: 2; }
+  .menu-close { display: block; grid-column: 3; color: var(--chalk); }
+  .menu-links { list-style: none; margin: 0; padding: 2.5rem 0; display: grid; align-content: center; }
+  .menu-links a { display: block; font: 400 clamp(2.4rem, 1.6rem + 4vw, 3.4rem)/1.1 var(--serif); padding: 0.85rem 0; border-bottom: 1px solid var(--rule-dark); }
+  .menu-links li:first-child a { border-top: 1px solid var(--rule-dark); }
+  .menu-foot { display: grid; gap: 1rem; }
+  .call { display: flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: 3rem; text-decoration: none; color: var(--taupe); font-size: 1.0625rem; }
+  .call :global(svg) { width: 1.25rem; height: 1.25rem; }
+  @media (prefers-reduced-motion: reduce) { .menu[open] { animation: none; } }
+</style>
+
+<script>
+  const header = document.getElementById("header")!;
+  const onScroll = () => header.classList.toggle("is-scrolled", scrollY > 24);
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  const menu = document.getElementById("menu") as HTMLDialogElement;
+  const open = document.getElementById("menu-open")!;
+  const close = () => menu.close();
+  open.addEventListener("click", () => { menu.showModal(); open.setAttribute("aria-expanded", "true"); });
+  document.getElementById("menu-close")!.addEventListener("click", close);
+  menu.addEventListener("close", () => { open.setAttribute("aria-expanded", "false"); open.focus(); });
+  // A link closes the menu, then the page scrolls to its section.
+  menu.querySelectorAll("a[href^='#']").forEach((a) => a.addEventListener("click", close));
+</script>

@@ -1,0 +1,50 @@
+---
+import { Picture } from "astro:assets";
+import Icon from "./Icon.astro";
+import { photos, widthsFor } from "../data/salon";
+const p = photos.hairWaves;
+---
+<section class="section surface-dark colour" id="colour" aria-labelledby="colour-title">
+  <div class="wrap grid">
+    <figure class="image frame" data-reveal="clip">
+      <div class="drift" data-parallax="0.06">
+        <Picture src={p.src} alt={p.alt} formats={["avif", "webp"]} widths={widthsFor(p.src)} sizes="(max-width: 64rem) 100vw, 58vw" loading="lazy" style={`object-position:${p.focus}`} />
+      </div>
+    </figure>
+
+    <div class="text">
+      <p class="label" data-reveal="fade">Colour</p>
+      <h2 id="colour-title" class="display" data-reveal="lines">
+        <span class="line"><span>Colour that</span></span>
+        <span class="line"><span>feels like <em>you.</em></span></span>
+      </h2>
+      <p class="lede muted" data-reveal="fade" data-delay="120">Good colour is personal. It suits your skin, your eyes and the way your hair grows, and it is honest about what can be achieved and how long it may take.</p>
+      <ol class="steps" data-reveal="fade" data-delay="200">
+        <li><h3>Consultation</h3><p class="muted">We look at your hair in daylight, talk through its history and agree what you would like.</p></li>
+        <li><h3>Patch test</h3><p class="muted">At least 48 hours before any colour, so we know it is right for you.</p></li>
+        <li><h3>The plan</h3><p class="muted">For bigger changes, grey blending or correction, we explain the steps and whether it needs more than one visit.</p></li>
+        <li><h3>Aftercare</h3><p class="muted">How to keep your colour looking its best at home, and when to come back.</p></li>
+      </ol>
+      <a class="link" href="#book" data-reveal="fade" data-delay="260">Arrange a colour consultation <Icon name="arrow" /></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .colour .grid { align-items: start; row-gap: 3rem; }
+  .image { grid-column: 1 / span 7; margin: 0 0 0 calc(-1 * max(var(--margin), (100vw - var(--max)) / 2 + var(--margin))); aspect-ratio: 1; max-height: 50rem; position: sticky; top: calc(var(--header-h) + 1rem); }
+  .drift { position: absolute; inset: -5% 0; }
+  .image :global(picture), .image :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .text { grid-column: 9 / span 4; display: grid; gap: 2rem; padding-top: clamp(0rem, 6vw, 6rem); }
+  .text h2 em { color: var(--champagne); }
+  .steps { list-style: none; margin: 0.5rem 0 0; padding: 0; counter-reset: step; border-top: 1px solid var(--rule-dark); }
+  .steps li { counter-increment: step; display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); column-gap: 0.75rem; row-gap: 0.35rem; padding: 1.25rem 0; border-bottom: 1px solid var(--rule-dark); }
+  .steps li::before { content: counter(step, decimal-leading-zero); grid-row: 1 / span 2; font: 500 var(--fs-label)/2 var(--sans); letter-spacing: 0.12em; color: var(--champagne); }
+  .steps h3 { font-size: 1.5rem; line-height: 1.2; }
+  .steps p { font-size: var(--fs-small); }
+  .link { color: var(--chalk); justify-self: start; }
+  @media (max-width: 64rem) {
+    .image { grid-column: 1 / -1; position: relative; top: 0; margin-right: calc(-1 * var(--margin)); aspect-ratio: 4 / 3; }
+    .text { grid-column: 1 / -1; padding-top: 0; max-width: 40rem; }
+  }
+</style>

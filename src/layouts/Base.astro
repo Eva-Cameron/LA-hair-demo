@@ -1,0 +1,65 @@
+---
+import "../styles/global.css";
+import { salon } from "../data/salon";
+import ogImage from "../assets/photos/occasion-chignon.jpg";
+import { getImage } from "astro:assets";
+
+interface Props { title: string; description: string; noindex?: boolean; schema?: boolean }
+const { title, description, noindex = false, schema = false } = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const og = await getImage({ src: ogImage, width: 1200, format: "jpg" });
+const ogUrl = Astro.site ? new URL(og.src, Astro.site).href : og.src;
+
+// Only facts with a source go into structured data. No rating, hours or prices until confirmed.
+const a = salon.address.value;
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "HairSalon",
+  name: salon.name,
+  legalName: salon.legalName.value,
+  telephone: salon.phone.value.e164,
+  address: { "@type": "PostalAddress", streetAddress: a.street, addressLocality: a.town, addressRegion: a.county, postalCode: a.postcode, addressCountry: a.country },
+  award: `${salon.award.value.title}, ${salon.award.value.event} ${salon.award.value.year}`,
+  hasMap: salon.directionsUrl,
+  ...(canonical ? { url: canonical, image: ogUrl } : {}),
+  ...(salon.openingHours ? { openingHoursSpecification: salon.openingHours.map((h) => ({ "@type": "OpeningHoursSpecification", dayOfWeek: h.day, opens: h.opens, closes: h.closes })) } : {}),
+};
+---
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  {canonical && <link rel="canonical" href={canonical} />}
+  {noindex && <meta name="robots" content="noindex" />}
+  <meta name="theme-color" content="#fcfaf6" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={salon.name} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogUrl} />
+  <meta property="og:locale" content="en_GB" />
+  {canonical && <meta property="og:url" content={canonical} />}
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  {Astro.site && <link rel="sitemap" href="/sitemap-index.xml" />}
+  {schema && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  <script is:inline>
+    // Opt into reveal animations only when script runs and motion is welcome; otherwise everything stays visible.
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("motion");
+      // Failsafe: if the motion module never arrives, show everything.
+      setTimeout(() => { if (!window.__motion) document.documentElement.classList.remove("motion"); }, 2500);
+    }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <slot />
+  <script>
+    import "../scripts/motion";
+  </script>
+</body>
+</html>

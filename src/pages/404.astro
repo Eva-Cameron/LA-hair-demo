@@ -1,0 +1,17 @@
+---
+import Base from "../layouts/Base.astro";
+import { salon } from "../data/salon";
+---
+<Base title="Page not found | Laura Anderson Hair" description="This page could not be found." noindex>
+  <main id="main" class="wrap missing">
+    <p class="label">Page not found</p>
+    <h1 class="display">This page has <em>moved on.</em></h1>
+    <p class="lede muted">The link may be out of date. Everything you need is on the home page, or call the salon on <a href={salon.phone.value.href}>{salon.phone.value.display}</a>.</p>
+    <a class="btn" href="/">Back to the salon</a>
+  </main>
+</Base>
+<style>
+  .missing { min-height: 100svh; display: grid; align-content: center; gap: 2rem; max-width: 56rem; }
+  .missing em { color: var(--champagne-ink); }
+  .missing .btn { justify-self: start; }
+</style>

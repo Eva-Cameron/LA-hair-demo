@@ -1,0 +1,44 @@
+---
+import Wordmark from "./Wordmark.astro";
+import { nav, salon } from "../data/salon";
+const a = salon.address.value;
+const phone = salon.phone.value;
+const year = new Date().getFullYear();
+---
+<footer class="footer surface-dark" aria-label="Site footer">
+  <div class="wrap">
+    <p class="closing" data-reveal="lines">
+      <span class="line"><span>Beautiful hair.</span></span>
+      <span class="line"><span>Considered care.</span></span>
+      <span class="line"><span><em>A feeling entirely your own.</em></span></span>
+    </p>
+    <div class="grid cols">
+      <div class="col"><p class="label">Visit</p><p>{a.street}<br />{a.town} {a.postcode}</p><a href={salon.directionsUrl} target="_blank" rel="noopener">Directions<span class="visually-hidden"> (opens Google Maps in a new tab)</span></a></div>
+      <div class="col"><p class="label">Book</p><a href={phone.href}>{phone.display}</a><a href="#book">Book an appointment</a></div>
+      <nav class="col" aria-label="Footer"><p class="label">Explore</p>{nav.map((n) => <a href={n.href}>{n.label}</a>)}</nav>
+      {salon.social.length > 0 && <div class="col"><p class="label">Follow</p>{salon.social.map((s) => <a href={s.href} rel="noopener">{s.label}</a>)}</div>}
+    </div>
+    <a class="mark" href="#top" aria-label="Back to top"><Wordmark size="footer" /></a>
+    <div class="legal">
+      <p>© {year} {salon.legalName.value}. Registered in England and Wales, company no. {salon.companyNumber.value}.</p>
+      <a href="/privacy/">Privacy notice</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--night); padding: var(--section) 0 calc(2rem + env(safe-area-inset-bottom, 0px)); }
+  .closing { font: 400 var(--fs-h2)/1.05 var(--serif);  }
+  .closing em { color: var(--champagne); }
+  .cols { margin-top: clamp(3.5rem, 7vw, 6rem); padding-top: 2rem; border-top: 1px solid var(--rule-dark); row-gap: 2.5rem; }
+  .col { grid-column: span 3; display: grid; align-content: start; gap: 0.6rem; font-size: var(--fs-small); color: var(--taupe); }
+  .col .label { margin-bottom: 0.4rem; }
+  .col a { color: var(--chalk); text-decoration: none; justify-self: start; min-height: 1.75rem; background: linear-gradient(currentColor, currentColor) left 90% / 0% 1px no-repeat; transition: background-size var(--t-ui) var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .col a:hover { background-size: 100% 1px; } }
+  .mark { display: block; margin-top: clamp(4rem, 9vw, 8rem); color: var(--chalk); text-decoration: none; }
+  .legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem 2rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule-dark); font-size: 0.8125rem; color: var(--taupe); }
+  .legal a { color: var(--taupe); }
+  @media (max-width: 64rem) { .col { grid-column: span 6; } }
+  @media (max-width: 30rem) { .col { grid-column: 1 / -1; } }
+  @media (max-width: 64rem) { .footer { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); } }
+</style>
