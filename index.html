@@ -8,7 +8,7 @@
 <meta property="og:title" content="Laura Anderson Hair · Beauty · Health">
 <meta property="og:description" content="Colour, beautifully corrected. Newgate Street, Morpeth.">
 <meta property="og:image" content="photos/hero.jpg">
-<meta name="theme-color" content="#F8F2EC">
+<meta name="theme-color" content="#3A2A23">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..500&family=Jost:wght@300;400;500&display=swap">
@@ -52,7 +52,6 @@
   <section class="hero on-photo" id="top">
     <img src="photos/hero.jpg" alt="Long copper balayage hair in soft waves, seen from behind in a bright salon" fetchpriority="high">
     <div class="in">
-      <p class="eyebrow c rise">Morpeth · Hair · Beauty · Health</p>
       <h1 class="rise d1">Colour,<br>beautifully <em>corrected.</em></h1>
       <p class="rise d2">Copper, balayage and soft grey blending on Newgate Street, from the salon Morpeth voted Business of the Year.</p>
       <div class="ctas rise d3">
@@ -153,13 +152,13 @@
         <h2>Hair for the morning <em>you'll keep the photographs of.</em></h2>
         <div class="pk"><div><b>Trial</b><span>Your look, tested and photographed</span></div><div><b>On the day</b><span>In the salon or at your venue</span></div><div><b>The party</b><span>Bridesmaids, mothers, flower girls</span></div></div>
         <form class="enq" id="enq" novalidate>
-          <div class="f"><label for="f-name">Name</label><input id="f-name" name="name" autocomplete="name" required><span class="err" id="e-name"></span></div>
-          <div class="f"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err" id="e-email"></span></div>
-          <div class="f"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="f"><label for="f-name">Name</label><input id="f-name" name="name" autocomplete="name" enterkeyhint="next" required><span class="err" id="e-name"></span></div>
+          <div class="f"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" autocapitalize="none" autocorrect="off" enterkeyhint="next" required><span class="err" id="e-email"></span></div>
+          <div class="f"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" enterkeyhint="next"></div>
           <div class="f"><label for="f-date">Wedding date</label><input id="f-date" name="date" type="date" required><span class="err" id="e-date"></span></div>
           <div class="f"><label for="f-venue">Venue</label><input id="f-venue" name="venue"></div>
           <div class="f"><label for="f-party">Party size</label><input id="f-party" name="party" type="number" min="1" max="20" inputmode="numeric"></div>
-          <div class="f w"><label for="f-msg">Tell us about the day</label><textarea id="f-msg" name="message"></textarea></div>
+          <div class="f w"><label for="f-msg">Tell us about the day</label><textarea id="f-msg" name="message" enterkeyhint="send"></textarea></div>
           <input class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
           <label class="consent"><input type="checkbox" id="f-ok" required> <span>I'm happy for Laura Anderson Hair to contact me about this enquiry.</span></label>
           <span class="err" id="e-ok" style="grid-column:1/-1"></span>
